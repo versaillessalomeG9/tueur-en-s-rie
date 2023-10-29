@@ -1,0 +1,65 @@
+/// Salomé Versailles G9
+///  exo 2 : tueur en série
+class Personnage {
+    constructor(nom, caractéristique, probaMourir, probaInfligerDégâts, probaMourirEnInfligeantDégâts) {
+      this.nom = nom;
+      this.caractéristique = caractéristique;
+      this.pointsDeVie = 100;
+      this.probaMourir = probaMourir;
+      this.probaInfligerDégâts = probaInfligerDégâts;
+      this.probaMourirEnInfligeantDégâts = probaMourirEnInfligeantDégâts;
+    }
+  
+    attaquer(survivant) {
+      let action = Math.random();
+  
+      if (action < this.probaMourir) {
+        console.log(this.nom, " est mort en attaquant ", survivant.nom, (survivant.caractéristique));
+        survivant.pointsDeVie -= 0;
+      } else if (action < this.probaInfligerDégâts) {
+        console.log(this.nom, "attaque ",survivant.nom, (survivant.caractéristique), " et inflige 10 points de dégâts.");
+        survivant.pointsDeVie -= 10;
+      } else if (action < this.probaMourirEnInfligeantDégâts) {
+        console.log(this.nom, "attaque ", survivant.nom (survivant.caractéristique)," et inflige 15 points de dégâts, mais meurt en même temps.");
+        this.pointsDeVie = 0;
+        survivant.pointsDeVie -= 15;
+      } else {
+        console.log(this.nom, "attaque ", survivant.nom, (survivant.caractéristique), " mais rate.");
+      }
+    }
+  }
+  
+  let nomsSurvivants = ["Nerd", "Sportif", "Blonde", "Moose", "Nada"];
+  let caractéristiquesSurvivants = ["Nerd", "Sportif", "Blonde", "Moose", "Nada"];
+  
+  let survivants = [];
+  for (let i = 0; i < 5; i++) {
+    let nomSurvivant = nomsSurvivants[Math.floor(Math.random() * nomsSurvivants.length)];
+    let caractéristiqueSurvivant = caractéristiquesSurvivants[Math.floor(Math.random() * caractéristiquesSurvivants.length)];
+    survivants.push(new Personnage(nomSurvivant, caractéristiqueSurvivant, 0.3, 0.5, 0.2));
+  }
+  
+  let jason = new Personnage("Jason", "Tueur en série", 0.7, 0.5, 0.3);
+  
+  while (jason.pointsDeVie > 0 && survivants.some(s => s.pointsDeVie > 0)) {
+    let survivantAttaquant = survivants[Math.floor(Math.random() * survivants.length)];
+    jason.attaquer(survivantAttaquant);
+  
+    survivants.forEach(survivant => {
+      if (survivant.pointsDeVie > 0) {
+        survivant.attaquer(jason);
+      }
+    });
+  }
+  
+  console.log("Morts :");
+  if (jason.pointsDeVie <= 0) {
+    console.log(" Jason est mort.");
+  } else {
+    console.log("Les survivants ont gagné, mais RIP à :");
+    survivants.forEach(survivant => {
+      if (survivant.pointsDeVie <= 0) {
+        console.log(survivant.nom, (survivant.caractéristique));
+      }
+    });
+  }
